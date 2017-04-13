@@ -1,11 +1,11 @@
 /*
 
-  Authors (group members):
-  Email addresses of group members:
-  Group name:
+  Authors (group members): Connor DuBois, Alexander Hsieh, Zachary Paryzek, John Austin
+  Email addresses of group members: cdubois2014@my.fit.edu, 
+  Group name: 23D
 
-  Course:
-  Section:
+  Course: CSE2010
+  Section: 3
 
   Description of the overall algorithm:
 
@@ -16,9 +16,8 @@ public class Hangman
 {
 
     // initialize HangmanPlayer with a file of English words
-    public Hangman(String wordFile)
-    {
-
+    public Hangman(String wordFile) {
+    	
     }
 
     // based on the current (partial or intitially blank) word
@@ -26,9 +25,8 @@ public class Hangman
     // currentWord: current word, currenWord.length has the length of the hidden word
     // isNewWord: indicates a new hidden word
     // returns the guessed letter
-    public char guess(String currentWord, boolean isNewWord)
-    {
-  char guess = ' ';
+    public char guess(String currentWord, boolean isNewWord) {
+    	char guess = ' ';
   
         return guess;
     }
@@ -42,9 +40,8 @@ public class Hangman
     //                                   or the whole word if the guessed letter was the
     //                                   last letter needed
     // b.         false               partial word without the guessed letter
-    public void feedback(boolean isCorrectGuess, String currentWord)
-    {
-
+    public void feedback(boolean isCorrectGuess, String currentWord) {
+    	
     }
 
 }
