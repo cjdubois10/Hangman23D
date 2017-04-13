@@ -12,11 +12,11 @@
 
 */
 
-public class Hangman
+public class HangmanPlayer
 {
 
     // initialize HangmanPlayer with a file of English words
-    public Hangman(String wordFile) {
+    public HangmanPlayer(String wordFile) {
     	
     }
 
