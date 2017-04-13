@@ -17,7 +17,7 @@ public class Hangman
 {
 
     // initialize HangmanPlayer with a file of English words
-    public void HangmanPlayer(String wordFile)
+    public Hangman(String wordFile)
     {
 
     }
