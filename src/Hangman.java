@@ -1,7 +1,7 @@
 /*
 
-  Authors (group members): Connor DuBois, Alexander Hsieh, Zachary Paryzek, John Austin
-  Email addresses of group members: cdubois2014@my.fit.edu, Ahsieh2014@my.fit.edu, 
+  Authors (group members): Connor DuBois, Alexander Hsieh, Zachary Paryzek, John Autry
+  Email addresses of group members: cdubois2014@my.fit.edu, Ahsieh2014@my.fit.edu, jautry2016@my.fit.edu
   Group name: 23D
 
   Course: CSE2010
