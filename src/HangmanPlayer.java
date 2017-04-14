@@ -19,7 +19,12 @@ import java.util.Scanner;
 
 public class HangmanPlayer
 {
-
+	/*
+	 * ListByLengthHeader can be a data structure that will be used as a start point 
+	 * for each list of words by length. It will store length of the words in the list, an
+	 * array of characters in order of most popular, and a linkedlist of strings which will
+	 * be all the words of that length.
+	 */
 	class ListByLengthHeader {
 		int length;
 		char[] mostPopularChars;
@@ -32,15 +37,21 @@ public class HangmanPlayer
 	}
     // initialize HangmanPlayer with a file of English words
     public HangmanPlayer(String wordFile) throws FileNotFoundException {
-    	Scanner unsortedDictionary = new Scanner (new File(wordFile));
-    	ListByLengthHeader[] sortedDictionary = new ListByLengthHeader[30];
+    	Scanner unsortedDictionary = new Scanner (new File(wordFile));		//create scanner out of word file
+    	ListByLengthHeader[] sortedDictionary = new ListByLengthHeader[30];	//create array of ListByLengthHeaders. 
+    																		//There will be 30 for words 1-30 on length.
+    	
+    	//for loop to populate the sortedDictionary with the 30 headers
     	for (int x = 1; x <= 30; x++) {
     		sortedDictionary[x] = new ListByLengthHeader(x, new char[26], new LinkedList<String>());
     	}
-    	String currentWord;
-    	int currentWordLength;
-    	while (unsortedDictionary.hasNextLine()) {
-    		currentWord = unsortedDictionary.nextLine();
+    	String currentWord;				//string representing the word that is read in
+    	int currentWordLength;			//int to hold the length of the word
+    	
+    	//until the file has no words left, read in the word, examine the length, and then add
+    	//the word to the listheader.words linkedlist that corresponds with the words length.
+    	while (unsortedDictionary.hasNextLine()) {			
+    		currentWord = unsortedDictionary.nextLine();	
     		currentWordLength = currentWord.length();
     		sortedDictionary[currentWordLength].words.add(currentWord);
     	}
