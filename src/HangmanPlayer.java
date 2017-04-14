@@ -1,3 +1,8 @@
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.util.LinkedList;
+import java.util.Scanner;
+
 /*
 
   Authors (group members): Connor DuBois, Alexander Hsieh, Zachary Paryzek, John Autry
@@ -15,9 +20,30 @@
 public class HangmanPlayer
 {
 
+	class ListByLengthHeader {
+		int length;
+		char[] mostPopularChars;
+		LinkedList<String> words;
+		public ListByLengthHeader (int length, char[] mostPopularChars, LinkedList<String> words) {
+			this.length = length;
+			this.mostPopularChars = mostPopularChars;
+			this.words = words;
+		}
+	}
     // initialize HangmanPlayer with a file of English words
-    public HangmanPlayer(String wordFile) {
-    	
+    public HangmanPlayer(String wordFile) throws FileNotFoundException {
+    	Scanner unsortedDictionary = new Scanner (new File(wordFile));
+    	ListByLengthHeader[] sortedDictionary = new ListByLengthHeader[30];
+    	for (int x = 1; x <= 30; x++) {
+    		sortedDictionary[x] = new ListByLengthHeader(x, new char[26], new LinkedList<String>());
+    	}
+    	String currentWord;
+    	int currentWordLength;
+    	while (unsortedDictionary.hasNextLine()) {
+    		currentWord = unsortedDictionary.nextLine();
+    		currentWordLength = currentWord.length();
+    		sortedDictionary[currentWordLength].words.add(currentWord);
+    	}
     }
 
     // based on the current (partial or intitially blank) word
