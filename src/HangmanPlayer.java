@@ -56,21 +56,23 @@ public class HangmanPlayer {
             sortedDictionary[currentWordLength].words.add(currentWord);
         }
 
-        char[] mostPopularChar = new char[]{0, 0, 0};
-
         for (int i = 1; i <= 30; i++) { //letter count array
-            String allWords = "";
-            int allWordsLength = 0;
+            String allWords = ""; // used to concatenate all words into one string henceforth called the superString in comments
+            int allWordsLength = 0; //size of string mentioned above
+            char[] mostPopularChar = new char[]{0, 0, 0}; //used for sorting before passing to main array
 
-            for (int j = 0; j < sortedDictionary[i].words.size(); j++) { //arrayList of words
-                String temp = sortedDictionary[i].words.get(j);
-                allWords = allWords + temp;
+            //Each word is concatenated into the supperString
+            for (int j = 0; j < sortedDictionary[i].words.size(); j++) {
+                allWords = allWords + sortedDictionary[i].words.get(j);
             }
 
             allWordsLength = allWords.length();
+            //create a map of all the alphabets to store the frequency of each alphabet
+            //the Key is the alphabet and the frequency is the Value
             Map<Character, Integer> numChars = new HashMap<Character, Integer>(Math.min(allWordsLength, 26));
 
-            for (int k = 0; k < allWordsLength; k++) { //count number of all goddamn chars
+            //count the frequency of each alphabet by increasing the count on each alphabet
+            for (int k = 0; k < allWordsLength; k++) {
                 char charAt = allWords.charAt(k);
                 if (!numChars.containsKey(charAt)) {
                     numChars.put(charAt, 1);
@@ -79,6 +81,11 @@ public class HangmanPlayer {
                 }
             }
 
+            //sorting begins here
+            // if new key is most frequent then it pushes down everything in the array and takes position 0 (henceforth [0])
+            // if new key if more frequent than [0] but less than [1], pushes down [1] and replaces [1] with the new key
+            // if new key if more frequent than [1] but less than [2], loop replaces [2] with new key
+            // only case left is if key is less frequent than all [0],[1], and [2], so it does nothing and continues the loop.
             for (Character key : numChars.keySet()) {
                 if (numChars.get(key) > numChars.get(mostPopularChar[0])) {
                     mostPopularChar[1] = mostPopularChar[0];
@@ -87,11 +94,11 @@ public class HangmanPlayer {
                 } else if (numChars.get(key) < numChars.get(mostPopularChar[0]) && numChars.get(key) > numChars.get(mostPopularChar[1])) {
                     mostPopularChar[2] = mostPopularChar[1];
                     mostPopularChar[1] = key;
-                }else if (numChars.get(key) < numChars.get(mostPopularChar[1]) && numChars.get(key) > numChars.get(mostPopularChar[2])){
+                } else if (numChars.get(key) < numChars.get(mostPopularChar[1]) && numChars.get(key) > numChars.get(mostPopularChar[2])) {
                     mostPopularChar[2] = key;
                 }
             }
-            sortedDictionary[i].mostPopularChars = mostPopularChar;
+            sortedDictionary[i].mostPopularChars = mostPopularChar; // pushes back temporary sorting array to main array
         }
 
     }
