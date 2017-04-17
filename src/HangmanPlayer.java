@@ -38,12 +38,12 @@ public class HangmanPlayer {
     // initialize HangmanPlayer with a file of English words
     public HangmanPlayer(String wordFile) throws FileNotFoundException {
         Scanner unsortedDictionary = new Scanner(new File(wordFile));        //create scanner out of word file
-        ListByLengthHeader[] sortedDictionary = new ListByLengthHeader[30];    //create array of ListByLengthHeaders.
-        //There will be 30 for words 1-30 on length.
+        ListByLengthHeader[] sortedDictionary = new ListByLengthHeader[25];    //create array of ListByLengthHeaders.
+        //There will be 25 for words 1-25 on length.
 
-        //for loop to populate the sortedDictionary with the 30 headers
-        for (int x = 1; x <= 30; x++) {
-            sortedDictionary[x] = new ListByLengthHeader(x, new char[26], new LinkedList<String>());
+        //for loop to populate the sortedDictionary with the 24 headers
+        for (int x = 1; x <= 24; x++) {
+            sortedDictionary[x] = new ListByLengthHeader(x, new char[3], new LinkedList<String>());
         }
         String currentWord;                //string representing the word that is read in
         int currentWordLength;            //int to hold the length of the word
@@ -51,15 +51,15 @@ public class HangmanPlayer {
         //until the file has no words left, read in the word, examine the length, and then add
         //the word to the listheader.words linkedlist that corresponds with the words length.
         while (unsortedDictionary.hasNextLine()) {
-            currentWord = unsortedDictionary.nextLine().trim().toLowerCase();
+            currentWord = unsortedDictionary.nextLine().toLowerCase();
             currentWordLength = currentWord.length();
             sortedDictionary[currentWordLength].words.add(currentWord);
         }
 
-        for (int i = 1; i <= 30; i++) { //letter count array
+        for (int i = 1; i <= 24; i++) { //letter count array
             String allWords = ""; // used to concatenate all words into one string henceforth called the superString in comments
             int allWordsLength = 0; //size of string mentioned above
-            char[] mostPopularChar = new char[]{0, 0, 0}; //used for sorting before passing to main array
+            char[] mostPopularChar = new char[]{'0', '0', '0'}; //used for sorting before passing to main array
 
             //Each word is concatenated into the supperString
             for (int j = 0; j < sortedDictionary[i].words.size(); j++) {
@@ -87,14 +87,14 @@ public class HangmanPlayer {
             // if new key if more frequent than [1] but less than [2], loop replaces [2] with new key
             // only case left is if key is less frequent than all [0],[1], and [2], so it does nothing and continues the loop.
             for (Character key : numChars.keySet()) {
-                if (numChars.get(key) > numChars.get(mostPopularChar[0])) {
+                if (numChars.get(key) >= numChars.get(mostPopularChar[0])) {
                     mostPopularChar[1] = mostPopularChar[0];
                     mostPopularChar[2] = mostPopularChar[1];
                     mostPopularChar[0] = key;
-                } else if (numChars.get(key) < numChars.get(mostPopularChar[0]) && numChars.get(key) > numChars.get(mostPopularChar[1])) {
+                } else if (numChars.get(key) <= numChars.get(mostPopularChar[0]) && numChars.get(key) > numChars.get(mostPopularChar[1])) {
                     mostPopularChar[2] = mostPopularChar[1];
                     mostPopularChar[1] = key;
-                } else if (numChars.get(key) < numChars.get(mostPopularChar[1]) && numChars.get(key) > numChars.get(mostPopularChar[2])) {
+                } else if (numChars.get(key) <= numChars.get(mostPopularChar[1]) && numChars.get(key) > numChars.get(mostPopularChar[2])) {
                     mostPopularChar[2] = key;
                 }
             }
