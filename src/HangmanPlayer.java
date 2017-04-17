@@ -59,7 +59,7 @@ public class HangmanPlayer {
         for (int i = 1; i <= 24; i++) { //letter count array
             String allWords = ""; // used to concatenate all words into one string henceforth called the superString in comments
             int allWordsLength = 0; //size of string mentioned above
-            char[] mostPopularChar = new char[]{'0', '0', '0'}; //used for sorting before passing to main array
+            char[] mostPopularChar = new char[]{'a', 'a', 'a'}; //used for sorting before passing to main array
 
             //Each word is concatenated into the supperString
             for (int j = 0; j < sortedDictionary[i].words.size(); j++) {
