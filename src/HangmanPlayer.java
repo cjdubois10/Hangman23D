@@ -214,7 +214,7 @@ public class HangmanPlayer {
 		for (int i = 0; i < currentWord.length(); i++) {
 			char find = findChar.charAt(i);
 			if (!guessed.contains(find)) {
-				System.out.println(find);
+				//System.out.println(find);
 				previousGuess = find;
 				break;
 			}
