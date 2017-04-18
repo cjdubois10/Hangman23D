@@ -19,13 +19,15 @@ import java.util.*;
 public class HangmanPlayer {
 	
 	//all of the length dictionaries
-	private ListByLengthHeader[] sortedDictionary;
+	private final ListByLengthHeader[] sortedDictionary;
 	
 	//when first guess is run, we know the size of word, so we can immediately get which list to search
 	private ListByLengthHeader searchRange; 
 	
 	//if a guess is wrong, we know what it was and we know to remove it
 	private char previousGuess; 
+	
+	private List<Character> hasBeenGuessed = new ArrayList<Character>();
 	
     /*
      * ListByLengthHeader can be a data structure that will be used as a start point
@@ -43,9 +45,16 @@ public class HangmanPlayer {
             this.mostPopularChars = mostPopularChars;
             this.words = words;
         }
+        
+        //returns untouched copy
+        public ListByLengthHeader copy()
+        {
+        	return new ListByLengthHeader(length, mostPopularChars, new LinkedList<String>(words));
+        }
 
         public void calcPopularity()
         {
+//        	System.out.println("word list we get pop chars from: " + words.toString());
         	//every word in this list in one string
             String allWords = "";
             
@@ -88,24 +97,27 @@ public class HangmanPlayer {
             //reverse so largest counts are first
             Collections.reverse(lettersList);
 //            System.out.println(lettersList.toString());
+
             
-            for (int i = 0; i < lettersList.size(); i++)
+            //size of letter list may not equal mostpopchars
+            for (int i = 0; i < mostPopularChars.length; i++)
             {
             	//assign mostPopularChar to the letters
             	mostPopularChars[i] = lettersList.get(i).letter;
             }
-//            System.out.println(Arrays.toString(mostPopularChar));
+//            System.out.println(Arrays.toString(mostPopularChars));
         }
         
         //return the most popular char for this list's words
         public char getMostPop()
         {
-        	if(mostPopularChars.length == 0)
-        	{
-          		System.out.println("**NEEDS FIXING**");
-        		System.out.println("popular chars list is empty. all 26 letters have been used. not sure how this happens");
-        	}
         	return mostPopularChars[0];
+        }
+        
+        //return the most popular char for this list's words
+        public char getPop(int index)
+        {
+        	return mostPopularChars[index];
         }
         
         //remove the first popular and make second place the new most popular
@@ -119,7 +131,7 @@ public class HangmanPlayer {
         //then reduce range based on known letter and positions (could be multiple)
         public void reduceIncluded(char c, List<Integer> positions)
         {
-
+        	
         	//because its a linked list we cant delete as we iterate
         	//we must mark for delete and then delete after we iterate
         	ArrayList<String> markedForDeletion = new ArrayList<String>();
@@ -144,12 +156,17 @@ public class HangmanPlayer {
     		{
        			//remove them from list
        			words.remove(word);
+//       			if(c == 'e')
+//       				System.out.println(word + " deleted because it did not have char " + c);
     		}
+       		
+        	//recalc char popularity after word list updated
+        	calcPopularity();
         }
         
         //if a guess is incorrect, then remove all words containing that guess letter
         public void reduceExcluded(char c)
-        {
+        {	
         	//because its a linked list we cant delete as we iterate
         	//we must mark for delete and then delete after we iterate
         	ArrayList<String> markedForDeletion = new ArrayList<String>();
@@ -170,7 +187,12 @@ public class HangmanPlayer {
     		{
        			//remove them from list
        			words.remove(word);
+//       			if(c == 'e')
+//       				System.out.println(word + " deleted because it had char " + c);
     		}
+       		
+        	//recalc char popularity after word list updated
+        	calcPopularity();
         }
     }
 
@@ -244,9 +266,8 @@ public class HangmanPlayer {
             
             */
         
-        //calc popularity of chars in each thing
         for (int i = 0; i < 24; i++)
-        {
+        { //letter count array
 //        	System.out.println(sortedDictionary[i]);
         	sortedDictionary[i].calcPopularity();
         }
@@ -260,22 +281,42 @@ public class HangmanPlayer {
     // returns the guessed letter
     public char guess(String currentWord, boolean isNewWord) {
     	
+//        System.out.println("********COMMENCE GUESS********");
+        
     	//if its our first guess on new word and we dont know length (we dont know search range)
     	if(isNewWord == true)
     	{
     		//reset previous guess
     		previousGuess = ' ';
+       		
+    		//reset hasBeenGuessed
+    		hasBeenGuessed.clear();
     		
     		//minus one because array goes 0-23 not 1-24
-        	searchRange = sortedDictionary[currentWord.length() - 1];
+    		//get a copy of the list so we dont affect original
+        	searchRange = sortedDictionary[currentWord.length() - 1].copy();
     	}
 
+//		System.out.println("no guess yet, word is: \"" + currentWord.replace(' ', '_') + "\"");
+//		System.out.println("popular chars: " + Arrays.toString(searchRange.mostPopularChars));
+//		System.out.println("first guess based on popular chars: " + searchRange.getMostPop());
         char guess = searchRange.getMostPop();
+        
+//        System.out.println("has '" + guess + "' been guessed: " + hasBeenGuessed.contains(guess));
+        int howManyHaveBeenGuessed = 0;
+       	while(hasBeenGuessed.contains(guess))
+        {
+    		guess = searchRange.getPop(howManyHaveBeenGuessed);
+    		howManyHaveBeenGuessed++;
+        }
+        
         previousGuess = guess;
         
-        //after most pop is used, pop it
-		searchRange.removeMostPop();
-//		System.out.println("popular chars: " + Arrays.toString(searchRange.mostPopularChars));
+//		System.out.println("final guess: " + guess);
+//		searchRange.removeMostPop();
+//		System.out.println("new popular chars: " + Arrays.toString(searchRange.mostPopularChars));
+		hasBeenGuessed.add(guess);
+//		System.out.println("hasBeenGuessed: " + hasBeenGuessed.toString());
         
         return guess;
     }
@@ -289,11 +330,15 @@ public class HangmanPlayer {
     //                                   or the whole word if the guessed letter was the
     //                                   last letter needed
     // b.         false               partial word without the guessed letter
-    public void feedback(boolean isCorrectGuess, String currentWord) {
-
+    public void feedback(boolean isCorrectGuess, String currentWord)
+    {
+		
+//        System.out.println("??????????? FEEDBACK ???????????");
+//        System.out.println("was '" + previousGuess + "' a good guess? " + isCorrectGuess);
+        
     	if(isCorrectGuess)
     	{
-    		System.out.println("good guess! word is now: " + currentWord);
+//    		System.out.println("CORRECT, word is: \"" + currentWord.replace(' ', '_') + "\"");
     		
     		//list of positions the guess is at
     		//min size = 1, max size = currentWord.length
@@ -310,10 +355,9 @@ public class HangmanPlayer {
     	}
     	else
     	{
-    		System.err.println("bad guess :(");
+//    		System.out.println("WRONG, word is: \"" + currentWord.replace(' ', '_') + "\"");
     		searchRange.reduceExcluded(previousGuess);
-    		guess(currentWord, false);
     	}
+//		guess(currentWord, false);
     }
-
 }
