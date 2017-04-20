@@ -125,7 +125,7 @@ import java.util.List;
         			{
         				//remove index i from possible indices
         				//because word at index i is no longer possible
-        				possibleIndices.remove(i);
+        				possibleIndices.remove(Integer.valueOf(i));
         			}
         		}
     		}
@@ -145,7 +145,7 @@ import java.util.List;
     			{
     				//remove index i from possible indices
     				//because word at index i is no longer possible
-    				possibleIndices.remove(i);
+    				possibleIndices.remove(Integer.valueOf(i));
     			}
     		}
 

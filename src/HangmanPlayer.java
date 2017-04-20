@@ -85,6 +85,7 @@ public class HangmanPlayer {
         	sortedDictionary[i].calcPopularity();
         }
 
+        unsortedDictionary.close();
     }
 
     // based on the current (partial or intitially blank) word
@@ -99,6 +100,9 @@ public class HangmanPlayer {
     	//if its our first guess on new word and we dont know length (we dont know search range)
     	if(isNewWord == true)
     	{
+    		//get sorted dictionary of length
+        	searchRange = sortedDictionary[currentWord.length() - 1];
+        	
     		//reset previous guess
     		previousGuess = ' ';
     		
