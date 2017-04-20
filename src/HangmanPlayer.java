@@ -156,8 +156,6 @@ public class HangmanPlayer {
     		{
        			//remove them from list
        			words.remove(word);
-//       			if(c == 'e')
-//       				System.out.println(word + " deleted because it did not have char " + c);
     		}
        		
         	//recalc char popularity after word list updated
@@ -187,8 +185,6 @@ public class HangmanPlayer {
     		{
        			//remove them from list
        			words.remove(word);
-//       			if(c == 'e')
-//       				System.out.println(word + " deleted because it had char " + c);
     		}
        		
         	//recalc char popularity after word list updated
