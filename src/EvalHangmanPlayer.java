@@ -50,10 +50,13 @@ import java.lang.management.*;
      report performance
  */
 
+
 public class EvalHangmanPlayer
 {
-    public static void main(String[]args) throws IOException{
+	public 	static int cnt;
 
+    public static void main(String[]args) throws IOException{
+    cnt  = 0;
 	if (args.length != 2) 
         {
             System.err.println("Usage: EvalHangmanPlayer wordFile hiddenWordFile");
