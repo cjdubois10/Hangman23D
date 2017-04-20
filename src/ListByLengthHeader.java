@@ -1,7 +1,6 @@
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
-import java.util.LinkedList;
 import java.util.List;
 
 /*
@@ -11,20 +10,28 @@ import java.util.List;
      * be all the words of that length.
      */
     class ListByLengthHeader {
-        int length;
         char[] mostPopularChars;
-        LinkedList<String> words;
+        
+        //stores the indices of possible words
+        //allows manipulation of word list without affecting word list itself
+        ArrayList<Integer> possibleIndices;
+        
+        //word list (in a fixed size array)
+        String[] words;
 
-        public ListByLengthHeader(int length, char[] mostPopularChars, LinkedList<String> words) {
-            this.length = length;
+        public ListByLengthHeader(char[] mostPopularChars, String[] words) {
+			possibleIndices = new ArrayList<>();
             this.mostPopularChars = mostPopularChars;
             this.words = words;
         }
         
-        //returns untouched copy
-        public ListByLengthHeader copy()
+        //reset search range
+        public void resetPossibleWords()
         {
-        	return new ListByLengthHeader(length, mostPopularChars, new LinkedList<String>(words));
+			possibleIndices.clear();
+			for (int i = 0; i < words.length; i++) {
+				possibleIndices.add(i);
+			}
         }
 
         public void calcPopularity()
@@ -33,10 +40,11 @@ import java.util.List;
         	//every word in this list in one string
             String allWords = "";
             
-            //Each word is concatenated into the allWords string
-            for (int i = 0; i < words.size(); i++)
+            //only take words from possibleIndices list
+            for (Integer i : possibleIndices)
             {
-                allWords += words.get(i);
+            	//take word at possible index i and compute based on that
+                allWords += words[i];
             }
             
             //initially the array is mapped a-z equals 0-25
@@ -70,7 +78,7 @@ import java.util.List;
             Collections.sort(lettersList);
             
             //reverse so largest counts are first
-            Collections.reverse(lettersList);
+//            Collections.reverse(lettersList);
 //            System.out.println(lettersList.toString());
 
             
@@ -105,32 +113,21 @@ import java.util.List;
         //if a guess is correct, and letter's positions is known
         //then reduce range based on known letter and positions (could be multiple)
         public void reduceIncluded(char c, List<Integer> positions)
-        {
-        	
-        	//because its a linked list we cant delete as we iterate
-        	//we must mark for delete and then delete after we iterate
-        	ArrayList<String> markedForDeletion = new ArrayList<String>();
-        			
-            //go through all words in list
-       		for(String word : words)
+        {	
+        	//go through all words in this list
+    		for(int i = 0; i < words.length; i++)
     		{
        			//check all positions
         		for(Integer pos : positions)
         		{
-        			//if it doesnt have that letter at that position, remove it
-        			if(word.charAt(pos) != c)
+        			//if word at index i doesnt have that letter at that position, remove it
+        			if(words[i].charAt(pos) != c)
         			{
-        				//mark for deletion
-        				markedForDeletion.add(word);
+        				//remove index i from possible indices
+        				//because word at index i is no longer possible
+        				possibleIndices.remove(i);
         			}
         		}
-    		}
-       		
-            //go through all words marked for deletion
-       		for(String word : markedForDeletion)
-    		{
-       			//remove them from list
-       			words.remove(word);
     		}
        		
         	//recalc char popularity after word list updated
@@ -140,28 +137,18 @@ import java.util.List;
         //if a guess is incorrect, then remove all words containing that guess letter
         public void reduceExcluded(char c)
         {	
-        	//because its a linked list we cant delete as we iterate
-        	//we must mark for delete and then delete after we iterate
-        	ArrayList<String> markedForDeletion = new ArrayList<String>();
-        	
         	//go through all words in this list
-    		for(String word : words)
+    		for(int i = 0; i < words.length; i++)
     		{
-    			//if it contains incorrect guess (bad letter)
-    			if(word.contains(String.valueOf(c)))
+    			//if word at index i contains incorrect guess (bad letter)
+    			if(words[i].contains(String.valueOf(c)))
     			{
-    				//mark for deletion
-    				markedForDeletion.add(word);
+    				//remove index i from possible indices
+    				//because word at index i is no longer possible
+    				possibleIndices.remove(i);
     			}
     		}
-    		
-            //go through all words marked for deletion
-       		for(String word : markedForDeletion)
-    		{
-       			//remove them from list
-       			words.remove(word);
-    		}
-       		
+
         	//recalc char popularity after word list updated
         	calcPopularity();
         }

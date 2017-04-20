@@ -1,3 +1,4 @@
+
 ******************************************************
 Tuesday April 18, 2017
 1:00 AM
@@ -30,3 +31,14 @@ Accuracy: 64.0500
 Average time per guess in seconds: 8.5565E-2
 Used memory in bytes: 20945136
 Overall Score: 3.0644
+
+******************************************************
+Wednesday April 19, 2017
+9:38 PM
+Machine that computed results: John's laptop
+Hidden word list: 1
+
+Accuracy: 67.8167
+Average time per guess in seconds: 7.4938E-2
+Used memory in bytes: 20948624
+Overall Score: 3.6706

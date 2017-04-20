@@ -27,13 +27,13 @@ public class CharCount implements Comparable<CharCount>
 	public int compareTo(CharCount c)
 	{
 		//if this count is greater, return 1
-		if(count > c.count)
+		if(count < c.count)
 		{
 			return 1;
 		}
 		
 		//if this count is less, return -1
-		else if(count < c.count)
+		else if(count > c.count)
 		{
 			return -1;
 		}
