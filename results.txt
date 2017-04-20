@@ -34,11 +34,11 @@ Overall Score: 3.0644
 
 ******************************************************
 Wednesday April 19, 2017
-9:38 PM
+9:58 PM
 Machine that computed results: John's laptop
 Hidden word list: 1
 
-Accuracy: 67.8167
-Average time per guess in seconds: 7.4938E-2
-Used memory in bytes: 20948624
-Overall Score: 3.6706
+Accuracy: 67.7833
+Average time per guess in seconds: 4.3294E-2
+Used memory in bytes: 17511408
+Overall Score: 5.2768
