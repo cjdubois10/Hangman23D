@@ -27,9 +27,7 @@ public class HangmanPlayer {
 	//if a guess is wrong, we know what it was and we know to remove it
 	private char previousGuess; 
 	
-	private ArrayList<Integer> possibleIndices;
-	
-	private List<Character> hasBeenGuessed = new ArrayList<Character>();
+	private List<Integer> alreadyGuessed = new ArrayList<Integer>();
 	
     // initialize HangmanPlayer with a file of English words
     public HangmanPlayer(String wordFile) throws FileNotFoundException {
@@ -38,30 +36,30 @@ public class HangmanPlayer {
         //There will be 25 for words 1-25 on length.
 
 		// for loop to populate the sortedDictionary with the 24 headers
-		sortedDictionary[0]  = new ListByLengthHeader( new char[26], new String[52]);
-		sortedDictionary[1]  = new ListByLengthHeader( new char[26], new String[155]);
-		sortedDictionary[2]  = new ListByLengthHeader( new char[26], new String[1351]);
-		sortedDictionary[3]  = new ListByLengthHeader( new char[26], new String[5110]);
-		sortedDictionary[4]  = new ListByLengthHeader( new char[26], new String[9987]);
-		sortedDictionary[5]  = new ListByLengthHeader( new char[26], new String[17477]);
-		sortedDictionary[6]  = new ListByLengthHeader( new char[26], new String[23734]);
-		sortedDictionary[7]  = new ListByLengthHeader( new char[26], new String[29926]);
-		sortedDictionary[8]  = new ListByLengthHeader( new char[26], new String[32380]);
-		sortedDictionary[9]  = new ListByLengthHeader( new char[26], new String[30867]);
-		sortedDictionary[10] = new ListByLengthHeader( new char[26], new String[26011]);
-		sortedDictionary[11] = new ListByLengthHeader( new char[26], new String[20460]);
-		sortedDictionary[12] = new ListByLengthHeader( new char[26], new String[14938]);
-		sortedDictionary[13] = new ListByLengthHeader( new char[26], new String[9762]);
-		sortedDictionary[14] = new ListByLengthHeader( new char[26], new String[5924]);
-		sortedDictionary[15] = new ListByLengthHeader( new char[26], new String[3377]);
-		sortedDictionary[16] = new ListByLengthHeader( new char[26], new String[1813]);
-		sortedDictionary[17] = new ListByLengthHeader( new char[26], new String[842]);
-		sortedDictionary[18] = new ListByLengthHeader( new char[26], new String[428]);
-		sortedDictionary[19] = new ListByLengthHeader( new char[26], new String[198]);
-		sortedDictionary[20] = new ListByLengthHeader( new char[26], new String[82]);
-		sortedDictionary[21] = new ListByLengthHeader( new char[26], new String[41]);
-		sortedDictionary[22] = new ListByLengthHeader( new char[26], new String[17]);
-		sortedDictionary[23] = new ListByLengthHeader( new char[26], new String[5]);
+		sortedDictionary[0]  = new ListByLengthHeader( new int[26], new String[52]);
+		sortedDictionary[1]  = new ListByLengthHeader( new int[26], new String[155]);
+		sortedDictionary[2]  = new ListByLengthHeader( new int[26], new String[1351]);
+		sortedDictionary[3]  = new ListByLengthHeader( new int[26], new String[5110]);
+		sortedDictionary[4]  = new ListByLengthHeader( new int[26], new String[9987]);
+		sortedDictionary[5]  = new ListByLengthHeader( new int[26], new String[17477]);
+		sortedDictionary[6]  = new ListByLengthHeader( new int[26], new String[23734]);
+		sortedDictionary[7]  = new ListByLengthHeader( new int[26], new String[29926]);
+		sortedDictionary[8]  = new ListByLengthHeader( new int[26], new String[32380]);
+		sortedDictionary[9]  = new ListByLengthHeader( new int[26], new String[30867]);
+		sortedDictionary[10] = new ListByLengthHeader( new int[26], new String[26011]);
+		sortedDictionary[11] = new ListByLengthHeader( new int[26], new String[20460]);
+		sortedDictionary[12] = new ListByLengthHeader( new int[26], new String[14938]);
+		sortedDictionary[13] = new ListByLengthHeader( new int[26], new String[9762]);
+		sortedDictionary[14] = new ListByLengthHeader( new int[26], new String[5924]);
+		sortedDictionary[15] = new ListByLengthHeader( new int[26], new String[3377]);
+		sortedDictionary[16] = new ListByLengthHeader( new int[26], new String[1813]);
+		sortedDictionary[17] = new ListByLengthHeader( new int[26], new String[842]);
+		sortedDictionary[18] = new ListByLengthHeader( new int[26], new String[428]);
+		sortedDictionary[19] = new ListByLengthHeader( new int[26], new String[198]);
+		sortedDictionary[20] = new ListByLengthHeader( new int[26], new String[82]);
+		sortedDictionary[21] = new ListByLengthHeader( new int[26], new String[41]);
+		sortedDictionary[22] = new ListByLengthHeader( new int[26], new String[17]);
+		sortedDictionary[23] = new ListByLengthHeader( new int[26], new String[5]);
 		
 		
         String currentWord;                //string representing the word that is read in
@@ -81,8 +79,8 @@ public class HangmanPlayer {
 
         for (int i = 0; i < 24; i++)
         {
-//        	System.out.println(sortedDictionary[i]);
-        	sortedDictionary[i].calcPopularity();
+//        	System.out.println("chars counted for length " + (i+1) + " in preprocess");
+        	sortedDictionary[i].countCharsInList();
         }
 
         unsortedDictionary.close();
@@ -95,7 +93,7 @@ public class HangmanPlayer {
     // returns the guessed letter
     public char guess(String currentWord, boolean isNewWord) {
     	
-//        System.out.println("********COMMENCE GUESS********");
+        System.out.println("********COMMENCE GUESS********");
         
     	//if its our first guess on new word and we dont know length (we dont know search range)
     	if(isNewWord == true)
@@ -107,38 +105,46 @@ public class HangmanPlayer {
     		previousGuess = ' ';
     		
     		//initially all words of currentWord.length() are possible, so add them all
-			possibleIndices = new ArrayList<>();
+    		sortedDictionary[currentWord.length() - 1].possibleIndices = new ArrayList<>();
 			for (int i = 0; i < sortedDictionary[currentWord.length() - 1].words.length; i++) {
-				possibleIndices.add(i);
+				sortedDictionary[currentWord.length() - 1].possibleIndices.add(i);
 			}
        		
     		//reset hasBeenGuessed
-    		hasBeenGuessed.clear();
+    		alreadyGuessed.clear();
     		
     		//reset possible indices list to indices of all words
         	searchRange.resetPossibleWords();
     	}
 
-//		System.out.println("no guess yet, word is: \"" + currentWord.replace(' ', '_') + "\"");
-//		System.out.println("popular chars: " + Arrays.toString(searchRange.mostPopularChars));
-//		System.out.println("first guess based on popular chars: " + searchRange.getMostPop());
-        char guess = searchRange.getMostPop();
+		System.out.println("no guess yet, word is: \"" + currentWord.replace(' ', '_') + "\"");
+		System.out.println("popular chars: " + Arrays.toString(searchRange.charCounts));
+		System.out.println("first guess based on popular chars: " + searchRange.getMax(alreadyGuessed));
+    	
+		System.out.println("search range max: " + searchRange.getMax(alreadyGuessed));
+    	
+        char guess = searchRange.getMax(alreadyGuessed);
+        //the position of the character in the alphabet (ASCII offset by 97)
+        int guessAlphaPos = (int) guess - 97;
         
-//        System.out.println("has '" + guess + "' been guessed: " + hasBeenGuessed.contains(guess));
-        int howManyHaveBeenGuessed = 0;
-       	while(hasBeenGuessed.contains(guess))
-        {
-    		guess = searchRange.getPop(howManyHaveBeenGuessed);
-    		howManyHaveBeenGuessed++;
-        }
+        System.out.println("has '" + guess + "' (" + guessAlphaPos + ") been guessed: " + alreadyGuessed.contains(guessAlphaPos));
+//       	while(alreadyGuessed.contains(guess))
+//        {
+//    		guess = searchRange.getMax(howManyHaveBeenGuessed);
+//    		howManyHaveBeenGuessed++;
+//        }
         
         previousGuess = guess;
         
-//		System.out.println("final guess: " + guess);
+		System.out.println("final guess: " + guess);
 //		searchRange.removeMostPop();
-//		System.out.println("new popular chars: " + Arrays.toString(searchRange.mostPopularChars));
-		hasBeenGuessed.add(guess);
-//		System.out.println("hasBeenGuessed: " + hasBeenGuessed.toString());
+		System.out.println("char quantity " + Arrays.toString(searchRange.charCounts));
+        
+		alreadyGuessed.add(guessAlphaPos);
+		System.out.println("hasBeenGuessed: " + alreadyGuessed.toString());
+		
+		searchRange.countCharsInList();
+		System.out.println("chars have been counted: " + Arrays.toString(searchRange.charCounts));
         
         return guess;
     }
@@ -155,12 +161,12 @@ public class HangmanPlayer {
     public void feedback(boolean isCorrectGuess, String currentWord)
     {
 		
-//        System.out.println("??????????? FEEDBACK ???????????");
-//        System.out.println("was '" + previousGuess + "' a good guess? " + isCorrectGuess);
+        System.out.println("??????????? FEEDBACK ???????????");
+        System.out.println("was '" + previousGuess + "' a good guess? " + isCorrectGuess);
         
     	if(isCorrectGuess)
     	{
-//    		System.out.println("CORRECT, word is: \"" + currentWord.replace(' ', '_') + "\"");
+    		System.out.println("CORRECT, word is: \"" + currentWord.replace(' ', '_') + "\"");
     		
     		//list of positions the guess is at
     		//min size = 1, max size = currentWord.length
@@ -177,9 +183,8 @@ public class HangmanPlayer {
     	}
     	else
     	{
-//    		System.out.println("WRONG, word is: \"" + currentWord.replace(' ', '_') + "\"");
+    		System.out.println("WRONG, word is: \"" + currentWord.replace(' ', '_') + "\"");
     		searchRange.reduceExcluded(previousGuess);
     	}
-//		guess(currentWord, false);
     }
 }

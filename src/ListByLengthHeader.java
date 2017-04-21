@@ -10,18 +10,25 @@ import java.util.List;
      * be all the words of that length.
      */
     class ListByLengthHeader {
-        char[] mostPopularChars;
+        int[] charCounts;
         
         //stores the indices of possible words
         //allows manipulation of word list without affecting word list itself
-        ArrayList<Integer> possibleIndices;
+        ArrayList<Integer> possibleIndices = new ArrayList<Integer>();
         
         //word list (in a fixed size array)
         String[] words;
 
-        public ListByLengthHeader(char[] mostPopularChars, String[] words) {
-			possibleIndices = new ArrayList<>();
-            this.mostPopularChars = mostPopularChars;
+        public ListByLengthHeader(int[] charCounts, String[] words)
+        {
+        
+        	//initially set all word indices to be possible
+        	for (int i = 0; i < words.length; i++)
+            {
+            	possibleIndices.add(i);
+            }
+        	
+            this.charCounts = charCounts;
             this.words = words;
         }
         
@@ -33,6 +40,8 @@ import java.util.List;
 				possibleIndices.add(i);
 			}
         }
+        
+        /*
 
         public void calcPopularity()
         {
@@ -109,7 +118,72 @@ import java.util.List;
             mostPopularChars = Arrays.copyOfRange(mostPopularChars, 1, mostPopularChars.length);
         }
         
+        */
         
+        public void countCharsInList()
+        {
+            //before we count chars, empty out the list
+            for (int i = 0; i < 26; i++)
+            {
+            	charCounts[i] = 0;
+            }
+            
+        	//put every word in this list in a single string
+            String allWords = "";
+            
+            //only take words from possibleIndices list
+            for (Integer i : possibleIndices)
+            {
+            	//take word at possible index i and compute based on that
+                allWords += words[i];
+            }
+            
+//            System.out.println("words to go through: " + words.length);
+//            System.out.println("before counting chars: " + Arrays.toString(charCounts));
+            
+            //go through every char in string of allwords
+            for (int i = 0; i < allWords.length(); i++)
+            {
+            	//get char at position
+                char charAt = allWords.charAt(i);
+                
+                //get position in alphabet of char
+                int letterPos = (int) charAt - 97;
+                
+//                System.out.println("letter: " + letterPos);
+                
+                //update that letter's count
+                charCounts[letterPos]++;
+            }
+            
+            System.out.println("alls chars counted: " + Arrays.toString(charCounts));
+        }
+        
+        public char getMax(List<Integer> alreadyGuessed)
+        {
+        	//initally position 0 is max
+        	int max = 0;
+        	
+            //go through entire char list and get max
+            for (int i = 0; i < 26; i++)
+            {
+            	//if current is greater than max, AND its not already guessed
+//            	System.out.println("max position is: " + max + " with value " + charCounts[max] );
+//            	System.out.println("current position is: " + i + " with value " + charCounts[i] );
+//            	System.out.println("value at current > value at max ? " + (charCounts[i] > charCounts[max]));
+//            	System.out.println("alreadyGuessed contains " + i + " ? " + alreadyGuessed.contains(i));
+            	
+            	if(charCounts[i] > charCounts[max] && !(alreadyGuessed.contains(i)))
+            	{
+            		//make it the new max
+            		max = i;
+            	}
+            }
+            
+            //return char for that max
+            return (char) (max + 97);
+        }
+
         //if a guess is correct, and letter's positions is known
         //then reduce range based on known letter and positions (could be multiple)
         public void reduceIncluded(char c, List<Integer> positions)
@@ -131,7 +205,7 @@ import java.util.List;
     		}
        		
         	//recalc char popularity after word list updated
-        	calcPopularity();
+    		countCharsInList();
         }
         
         //if a guess is incorrect, then remove all words containing that guess letter
@@ -150,6 +224,6 @@ import java.util.List;
     		}
 
         	//recalc char popularity after word list updated
-        	calcPopularity();
+    		countCharsInList();
         }
     }
