@@ -10,6 +10,8 @@ import java.util.List;
      * be all the words of that length.
      */
     class ListByLengthHeader {
+    	
+    	//list of char counts where index (0...25) = (a...z) and value at index is the count
         int[] charCounts;
         
         //stores the indices of possible words
@@ -19,6 +21,7 @@ import java.util.List;
         //word list (in a fixed size array)
         String[] words;
 
+        //construct the list by populating all indices 
         public ListByLengthHeader(int[] charCounts, String[] words)
         {
         
@@ -28,98 +31,27 @@ import java.util.List;
             	possibleIndices.add(i);
             }
         	
+        	//initialize charCounts to empty
             this.charCounts = charCounts;
+            
+            //initialize words to empty
             this.words = words;
         }
         
         //reset search range
         public void resetPossibleWords()
         {
+        	//empty it
 			possibleIndices.clear();
-			for (int i = 0; i < words.length; i++) {
+			
+			//repopulate it with 0...how many words
+			for (int i = 0; i < words.length; i++)
+			{
 				possibleIndices.add(i);
 			}
         }
         
-        /*
-
-        public void calcPopularity()
-        {
-//        	System.out.println("word list we get pop chars from: " + words.toString());
-        	//every word in this list in one string
-            String allWords = "";
-            
-            //only take words from possibleIndices list
-            for (Integer i : possibleIndices)
-            {
-            	//take word at possible index i and compute based on that
-                allWords += words[i];
-            }
-            
-            //initially the array is mapped a-z equals 0-25
-            CharCount[] letters = new CharCount[26];
-            
-            
-            for (int i = 0; i < letters.length; i++)
-            {
-                //a is 97 in unicode, and letters increment from there
-            	//so get char offset from 97
-            	char letter = (char) (97 + i);
-
-            	//create new charcount with count 0
-                letters[i] = new CharCount(letter);
-            }
-            
-            for (int i = 0; i < allWords.length(); i++)
-            {
-            	//get char at position
-                char charAt = allWords.charAt(i);
-                
-                //get position in alphabet of char
-                int letterPos = (int) charAt - 97;
-                
-                //update that object's count (it know's its char)
-                letters[letterPos].count++;
-            }
-            
-            List<CharCount> lettersList = Arrays.asList(letters);
-            //sort in ascending order (smallest letter counts first)
-            Collections.sort(lettersList);
-            
-            //reverse so largest counts are first
-//            Collections.reverse(lettersList);
-//            System.out.println(lettersList.toString());
-
-            
-            //size of letter list may not equal mostpopchars
-            for (int i = 0; i < mostPopularChars.length; i++)
-            {
-            	//assign mostPopularChar to the letters
-            	mostPopularChars[i] = lettersList.get(i).letter;
-            }
-//            System.out.println(Arrays.toString(mostPopularChars));
-        }
-        
-        //return the most popular char for this list's words
-        public char getMostPop()
-        {
-        	return mostPopularChars[0];
-        }
-        
-        //return the most popular char for this list's words
-        public char getPop(int index)
-        {
-        	return mostPopularChars[index];
-        }
-        
-        //remove the first popular and make second place the new most popular
-        public void removeMostPop()
-        {
-            mostPopularChars = Arrays.copyOfRange(mostPopularChars, 1, mostPopularChars.length);
-        }
-        
-        */
-        
+        //count the frequency chars appear in the word list (char count)
         public void countCharsInList()
         {
             //before we count chars, empty out the list
@@ -131,16 +63,13 @@ import java.util.List;
         	//put every word in this list in a single string
             String allWords = "";
             
-            //only take words from possibleIndices list
+            //only count words from possibleIndices list
             for (Integer i : possibleIndices)
             {
-            	//take word at possible index i and compute based on that
+            	//take word at possible index i and add it to string allWords
                 allWords += words[i];
             }
-            
-//            System.out.println("words to go through: " + words.length);
-//            System.out.println("before counting chars: " + Arrays.toString(charCounts));
-            
+
             //go through every char in string of allwords
             for (int i = 0; i < allWords.length(); i++)
             {
@@ -149,39 +78,36 @@ import java.util.List;
                 
                 //get position in alphabet of char
                 int letterPos = (int) charAt - 97;
-                
-//                System.out.println("letter: " + letterPos);
-                
+
                 //update that letter's count
                 charCounts[letterPos]++;
             }
-            
-            System.out.println("alls chars counted: " + Arrays.toString(charCounts));
         }
         
         public char getMax(List<Integer> alreadyGuessed)
         {
         	//initally position 0 is max
+        	int maxPos = 0;
+        	
+        	//initially max is 0 (NOT charCounts[0] or else the max will default to count of letter a)
         	int max = 0;
         	
             //go through entire char list and get max
             for (int i = 0; i < 26; i++)
             {
             	//if current is greater than max, AND its not already guessed
-//            	System.out.println("max position is: " + max + " with value " + charCounts[max] );
-//            	System.out.println("current position is: " + i + " with value " + charCounts[i] );
-//            	System.out.println("value at current > value at max ? " + (charCounts[i] > charCounts[max]));
-//            	System.out.println("alreadyGuessed contains " + i + " ? " + alreadyGuessed.contains(i));
-            	
-            	if(charCounts[i] > charCounts[max] && !(alreadyGuessed.contains(i)))
+            	if(charCounts[i] > max && !(alreadyGuessed.contains(i)))
             	{
             		//make it the new max
-            		max = i;
+            		max = charCounts[i];
+            		
+            		//update position of max
+            		maxPos = i;
             	}
             }
             
             //return char for that max
-            return (char) (max + 97);
+            return (char) (maxPos + 97);
         }
 
         //if a guess is correct, and letter's positions is known
@@ -207,7 +133,7 @@ import java.util.List;
         	//recalc char popularity after word list updated
     		countCharsInList();
         }
-        
+
         //if a guess is incorrect, then remove all words containing that guess letter
         public void reduceExcluded(char c)
         {	
