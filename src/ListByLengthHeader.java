@@ -22,7 +22,7 @@ import java.util.List;
         String[] words;
 
         //construct the list by populating all indices 
-        public ListByLengthHeader(int[] charCounts, String[] words)
+        public ListByLengthHeader(String[] words)
         {
         
         	//initially set all word indices to be possible
@@ -32,7 +32,7 @@ import java.util.List;
             }
         	
         	//initialize charCounts to empty
-            this.charCounts = charCounts;
+            this.charCounts = new int[26];
             
             //initialize words to empty
             this.words = words;
@@ -126,6 +126,10 @@ import java.util.List;
         				//remove index i from possible indices
         				//because word at index i is no longer possible
         				possibleIndices.remove(Integer.valueOf(i));
+        				
+        				//if doesnt have that char at i, then the word is invalid
+        				//we don't need to check rest of positions, just break and go to next word
+        				break;
         			}
         		}
     		}

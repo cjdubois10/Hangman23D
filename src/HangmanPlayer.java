@@ -43,30 +43,30 @@ public class HangmanPlayer {
         sortedDictionary = new ListByLengthHeader[24];    
 
 		// create 24 length dictionaries
-		sortedDictionary[0]  = new ListByLengthHeader(new int[26], new String[52]);
-		sortedDictionary[1]  = new ListByLengthHeader(new int[26], new String[155]);
-		sortedDictionary[2]  = new ListByLengthHeader(new int[26], new String[1351]);
-		sortedDictionary[3]  = new ListByLengthHeader(new int[26], new String[5110]);
-		sortedDictionary[4]  = new ListByLengthHeader(new int[26], new String[9987]);
-		sortedDictionary[5]  = new ListByLengthHeader(new int[26], new String[17477]);
-		sortedDictionary[6]  = new ListByLengthHeader(new int[26], new String[23734]);
-		sortedDictionary[7]  = new ListByLengthHeader(new int[26], new String[29926]);
-		sortedDictionary[8]  = new ListByLengthHeader(new int[26], new String[32380]);
-		sortedDictionary[9]  = new ListByLengthHeader(new int[26], new String[30867]);
-		sortedDictionary[10] = new ListByLengthHeader(new int[26], new String[26011]);
-		sortedDictionary[11] = new ListByLengthHeader(new int[26], new String[20460]);
-		sortedDictionary[12] = new ListByLengthHeader(new int[26], new String[14938]);
-		sortedDictionary[13] = new ListByLengthHeader(new int[26], new String[9762]);
-		sortedDictionary[14] = new ListByLengthHeader(new int[26], new String[5924]);
-		sortedDictionary[15] = new ListByLengthHeader(new int[26], new String[3377]);
-		sortedDictionary[16] = new ListByLengthHeader(new int[26], new String[1813]);
-		sortedDictionary[17] = new ListByLengthHeader(new int[26], new String[842]);
-		sortedDictionary[18] = new ListByLengthHeader(new int[26], new String[428]);
-		sortedDictionary[19] = new ListByLengthHeader(new int[26], new String[198]);
-		sortedDictionary[20] = new ListByLengthHeader(new int[26], new String[82]);
-		sortedDictionary[21] = new ListByLengthHeader(new int[26], new String[41]);
-		sortedDictionary[22] = new ListByLengthHeader(new int[26], new String[17]);
-		sortedDictionary[23] = new ListByLengthHeader(new int[26], new String[5]);
+		sortedDictionary[0]  = new ListByLengthHeader(new String[52]);
+		sortedDictionary[1]  = new ListByLengthHeader(new String[155]);
+		sortedDictionary[2]  = new ListByLengthHeader(new String[1351]);
+		sortedDictionary[3]  = new ListByLengthHeader(new String[5110]);
+		sortedDictionary[4]  = new ListByLengthHeader(new String[9987]);
+		sortedDictionary[5]  = new ListByLengthHeader(new String[17477]);
+		sortedDictionary[6]  = new ListByLengthHeader(new String[23734]);
+		sortedDictionary[7]  = new ListByLengthHeader(new String[29926]);
+		sortedDictionary[8]  = new ListByLengthHeader(new String[32380]);
+		sortedDictionary[9]  = new ListByLengthHeader(new String[30867]);
+		sortedDictionary[10] = new ListByLengthHeader(new String[26011]);
+		sortedDictionary[11] = new ListByLengthHeader(new String[20460]);
+		sortedDictionary[12] = new ListByLengthHeader(new String[14938]);
+		sortedDictionary[13] = new ListByLengthHeader(new String[9762]);
+		sortedDictionary[14] = new ListByLengthHeader(new String[5924]);
+		sortedDictionary[15] = new ListByLengthHeader(new String[3377]);
+		sortedDictionary[16] = new ListByLengthHeader(new String[1813]);
+		sortedDictionary[17] = new ListByLengthHeader(new String[842]);
+		sortedDictionary[18] = new ListByLengthHeader(new String[428]);
+		sortedDictionary[19] = new ListByLengthHeader(new String[198]);
+		sortedDictionary[20] = new ListByLengthHeader(new String[82]);
+		sortedDictionary[21] = new ListByLengthHeader(new String[41]);
+		sortedDictionary[22] = new ListByLengthHeader(new String[17]);
+		sortedDictionary[23] = new ListByLengthHeader(new String[5]);
 		
 		//string representing the word that is read froms canner
         String currentWord;    
