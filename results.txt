@@ -64,3 +64,15 @@ Accuracy: 67.8167
 Average time per guess in seconds: 3.7681E-2
 Used memory in bytes: 17400392
 Overall Score: 5.6798
+
+******************************************************
+Saturday April 22, 2017
+9:23 PM
+Machine that computed results: John's laptop
+Hidden word list: 1
+
+Accuracy: 67.8167
+Average time per guess in seconds: 3.6586E-2
+Used memory in bytes: 17400392
+Overall Score: 5.7642
+
