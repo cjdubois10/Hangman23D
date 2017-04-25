@@ -9,7 +9,10 @@ import java.util.*;
   Group name: 23D
   Course: CSE2010
   Section: 3
-  Description of the overall algorithm:
+  Description of the overall algorithm: Sorts the word list into individual lists based on the length of the word. Then calculates
+  		most popular characters in each list and guesses based on that. With each guess, the search range is narrowed based on words
+  		what chars are known and what position they're at. With each guess, the popular chars list is updated to reflect the
+  		remove words.
 */
 
 public class HangmanPlayer {
@@ -17,18 +20,16 @@ public class HangmanPlayer {
 	// all of the length dictionaries
 	private final ListByLengthHeader[] sortedDictionary;
 
-	// when first guess is run, we know the size of word, so we can immediately
-	// get which list to search
-	private ListByLengthHeader searchRange;
-
-	// if a guess is wrong, we know what it was and we know to remove it
-	private char previousGuess;
-
+	//the guess
 	char guess;
-	LinkedList<Integer> posible;
-	// boolean[] posible;
+	
+	//the list of indexes of possible words
+	LinkedList<Integer> possible;
+	
+	// how many time each char appears
 	char[] numOfOccurences;
 
+	//list of chars that has appeared
 	private LinkedList<Character> hasBeenGuessed;
 
 	/*
@@ -40,22 +41,18 @@ public class HangmanPlayer {
 	class ListByLengthHeader {
 		char[] mostPopularChars;
 		String[] words;
-		ArrayList<ArrayList<String>> wordsWithLetter;
 
-		public ListByLengthHeader(char[] mostPopularChars, String[] words, ArrayList<ArrayList<String>> wordsWithLetter) {
+		public ListByLengthHeader(char[] mostPopularChars, String[] words) {
 			this.mostPopularChars = mostPopularChars;
 			this.words = words;
-			this.wordsWithLetter = wordsWithLetter;
 		}
 
 		// returns untouched copy
 		public ListByLengthHeader copy() {
-			return new ListByLengthHeader( mostPopularChars, words, wordsWithLetter);
+			return new ListByLengthHeader( mostPopularChars, words);
 		}
 
 		public void calcPopularity() {
-			// System.out.println("word list we get pop chars from: " +
-			// words.toString());
 			// every word in this list in one string
 			String allWords = "";
 
@@ -91,16 +88,11 @@ public class HangmanPlayer {
 			// sort in ascending order (smallest letter counts first)
 			Collections.sort(lettersList);
 
-			// reverse so largest counts are first
-			Collections.reverse(lettersList);
-			// System.out.println(lettersList.toString());
-
 			// size of letter list may not equal mostpopchars
 			for (int i = 0; i < mostPopularChars.length; i++) {
 				// assign mostPopularChar to the letters
 				mostPopularChars[i] = lettersList.get(i).letter;
 			}
-			// System.out.println(Arrays.toString(mostPopularChars));
 		}
 
 		// return the most popular char for this list's words
@@ -139,13 +131,6 @@ public class HangmanPlayer {
 				}
 			}
 
-			// go through all words marked for deletion
-			for (String word : markedForDeletion) {
-				// remove them from list
-				// TODO figure out to remove item from array
-				// words.remove(word);
-			}
-
 			// recalc char popularity after word list updated
 			calcPopularity();
 		}
@@ -172,41 +157,36 @@ public class HangmanPlayer {
 
 	// initialize HangmanPlayer with a file of English words
 	public HangmanPlayer(String wordFile) throws FileNotFoundException {
-		Scanner unsortedDictionary = new Scanner(new File(wordFile)); // create
-																		// scanner
-																		// out
-																		// of
-																		// word
-																		// file
+		Scanner unsortedDictionary = new Scanner(new File(wordFile)); // create scanner out of word file
 		sortedDictionary = new ListByLengthHeader[24]; // create array of
 														// ListByLengthHeaders.
 		// There will be 25 for words 1-25 on length.
 
 		// for loop to populate the sortedDictionary with the 24 headers
-		sortedDictionary[0] = new ListByLengthHeader( new char[26], new String[52], new ArrayList<ArrayList<String>>());
-		sortedDictionary[1] = new ListByLengthHeader( new char[26], new String[155], new ArrayList<ArrayList<String>>());
-		sortedDictionary[2] = new ListByLengthHeader( new char[26], new String[1351], new ArrayList<ArrayList<String>>());
-		sortedDictionary[3] = new ListByLengthHeader( new char[26], new String[5110], new ArrayList<ArrayList<String>>());
-		sortedDictionary[4] = new ListByLengthHeader( new char[26], new String[9987], new ArrayList<ArrayList<String>>());
-		sortedDictionary[5] = new ListByLengthHeader( new char[26], new String[17477], new ArrayList<ArrayList<String>>());
-		sortedDictionary[6] = new ListByLengthHeader( new char[26], new String[23734], new ArrayList<ArrayList<String>>());
-		sortedDictionary[7] = new ListByLengthHeader( new char[26], new String[29926], new ArrayList<ArrayList<String>>());
-		sortedDictionary[8] = new ListByLengthHeader( new char[26], new String[32380], new ArrayList<ArrayList<String>>());
-		sortedDictionary[9] = new ListByLengthHeader( new char[26], new String[30867], new ArrayList<ArrayList<String>>());
-		sortedDictionary[10] = new ListByLengthHeader( new char[26], new String[26011], new ArrayList<ArrayList<String>>());
-		sortedDictionary[11] = new ListByLengthHeader( new char[26], new String[20460], new ArrayList<ArrayList<String>>());
-		sortedDictionary[12] = new ListByLengthHeader( new char[26], new String[14938], new ArrayList<ArrayList<String>>());
-		sortedDictionary[13] = new ListByLengthHeader( new char[26], new String[9762], new ArrayList<ArrayList<String>>());
-		sortedDictionary[14] = new ListByLengthHeader( new char[26], new String[5924], new ArrayList<ArrayList<String>>());
-		sortedDictionary[15] = new ListByLengthHeader( new char[26], new String[3377], new ArrayList<ArrayList<String>>());
-		sortedDictionary[16] = new ListByLengthHeader( new char[26], new String[1813], new ArrayList<ArrayList<String>>());
-		sortedDictionary[17] = new ListByLengthHeader( new char[26], new String[842], new ArrayList<ArrayList<String>>());
-		sortedDictionary[18] = new ListByLengthHeader( new char[26], new String[428], new ArrayList<ArrayList<String>>());
-		sortedDictionary[19] = new ListByLengthHeader( new char[26], new String[198], new ArrayList<ArrayList<String>>());
-		sortedDictionary[20] = new ListByLengthHeader( new char[26], new String[82], new ArrayList<ArrayList<String>>());
-		sortedDictionary[21] = new ListByLengthHeader( new char[26], new String[41], new ArrayList<ArrayList<String>>());
-		sortedDictionary[22] = new ListByLengthHeader( new char[26], new String[17], new ArrayList<ArrayList<String>>());
-		sortedDictionary[23] = new ListByLengthHeader( new char[26], new String[5], new ArrayList<ArrayList<String>>());
+		sortedDictionary[0] = new ListByLengthHeader( new char[26], new String[52]);
+		sortedDictionary[1] = new ListByLengthHeader( new char[26], new String[155]);
+		sortedDictionary[2] = new ListByLengthHeader( new char[26], new String[1351]);
+		sortedDictionary[3] = new ListByLengthHeader( new char[26], new String[5110]);
+		sortedDictionary[4] = new ListByLengthHeader( new char[26], new String[9987]);
+		sortedDictionary[5] = new ListByLengthHeader( new char[26], new String[17477]);
+		sortedDictionary[6] = new ListByLengthHeader( new char[26], new String[23734]);
+		sortedDictionary[7] = new ListByLengthHeader( new char[26], new String[29926]);
+		sortedDictionary[8] = new ListByLengthHeader( new char[26], new String[32380]);
+		sortedDictionary[9] = new ListByLengthHeader( new char[26], new String[30867]);
+		sortedDictionary[10] = new ListByLengthHeader( new char[26], new String[26011]);
+		sortedDictionary[11] = new ListByLengthHeader( new char[26], new String[20460]);
+		sortedDictionary[12] = new ListByLengthHeader( new char[26], new String[14938]);
+		sortedDictionary[13] = new ListByLengthHeader( new char[26], new String[9762]);
+		sortedDictionary[14] = new ListByLengthHeader( new char[26], new String[5924]);
+		sortedDictionary[15] = new ListByLengthHeader( new char[26], new String[3377]);
+		sortedDictionary[16] = new ListByLengthHeader( new char[26], new String[1813]);
+		sortedDictionary[17] = new ListByLengthHeader( new char[26], new String[842]);
+		sortedDictionary[18] = new ListByLengthHeader( new char[26], new String[428]);
+		sortedDictionary[19] = new ListByLengthHeader( new char[26], new String[198]);
+		sortedDictionary[20] = new ListByLengthHeader( new char[26], new String[82]);
+		sortedDictionary[21] = new ListByLengthHeader( new char[26], new String[41]);
+		sortedDictionary[22] = new ListByLengthHeader( new char[26], new String[17]);
+		sortedDictionary[23] = new ListByLengthHeader( new char[26], new String[5]);
 
 		String currentWord; // string representing the word that is read in
 		int currentWordLength; // int to hold the length of the word
@@ -228,9 +208,6 @@ public class HangmanPlayer {
 		for (int i = 0; i < 24; i++) {
 			sortedDictionary[i].calcPopularity();
 		}
-		for (int i = 0; i < sortedDictionary.length; i++) {
-			System.out.println(sortedDictionary[i].words.length);
-		}
 
 	}
 
@@ -242,30 +219,22 @@ public class HangmanPlayer {
 	// returns the guessed letter
 	public char guess(String currentWord, boolean isNewWord) {
 
-		// System.out.println("********COMMENCE GUESS********");
 
-		// if its our first guess on new word and we dont know length (we dont
-		// know search range)
+		// if its our first guess on new word and we dont know length (we dont know search range)
 		if (isNewWord) {
-			//EvalHangmanPlayer.cnt++;
-			//System.out.println(EvalHangmanPlayer.cnt);
-			// System.out.println(Arrays.toString(sortedDictionary[currentWord.length()-1].words));
-			posible = new LinkedList<>();
+			possible = new LinkedList<>();
 			for (int i = 0; i < sortedDictionary[currentWord.length() - 1].words.length; i++) {
-				posible.add(i);
+				possible.add(i);
 			}
 			numOfOccurences = sortedDictionary[currentWord.length() - 1].mostPopularChars;
 			guess = numOfOccurences[0];
 			hasBeenGuessed = new LinkedList<Character>();
-			// System.out.println(Arrays.toString(sortedDictionary[currentWord.length()
-			// - 1].mostPopularChars));
 		} else {
 			guess = numOfOccurences[0];
 		}
-		// System.out.println(Arrays.toString(numOfOccurences));
 
 		hasBeenGuessed.add(guess);
-		// System.out.println(hasBeenGuessed.toString());
+
 		return guess;
 	}
 
@@ -280,15 +249,14 @@ public class HangmanPlayer {
 	// last letter needed
 	// b. false partial word without the guessed letter
 	public void feedback(boolean isCorrectGuess, String currentWord) {
-		// System.out.println(isCorrectGuess);
+
 		String allWords = "";
-		// System.out.println("\n\n");
+		
 		char[] currentChar = currentWord.toCharArray();
 
-		for (int k = posible.size() - 1; k >= 0; k--) {
-			// System.out.println(k);
-			// System.out.println("-------" + k + "--------");
-			String temp = sortedDictionary[currentWord.length() - 1].words[posible.get(k)];
+		for (int k = possible.size() - 1; k >= 0; k--) {
+
+			String temp = sortedDictionary[currentWord.length() - 1].words[possible.get(k)];
 			char[] stringToChar = temp.toCharArray();
 			boolean isStillValid = true;
 
@@ -297,13 +265,13 @@ public class HangmanPlayer {
 					if (isCorrectGuess) {
 						if (currentChar[j] != ' ') {
 							if (currentChar[j] != stringToChar[j]) {
-								posible.remove(k);
+								possible.remove(k);
 								isStillValid = false;
 								break;
 							}
 						} else {
 							if (stringToChar[j] == guess) {
-								posible.remove(k);
+								possible.remove(k);
 								isStillValid = false;
 								break;
 							}
@@ -311,7 +279,7 @@ public class HangmanPlayer {
 						
 					} else {
 						if (stringToChar[j] == guess) {
-							posible.remove(k);
+							possible.remove(k);
 							isStillValid = false;
 							break;
 						}
@@ -352,10 +320,6 @@ public class HangmanPlayer {
 		List<CharCount> lettersList = Arrays.asList(letters);
 		// sort in ascending order (smallest letter counts first)
 		Collections.sort(lettersList);
-
-		// reverse so largest counts are first
-		//Collections.reverse(lettersList);
-		// System.out.println(lettersList.toString());
 
 		// size of letter list may not equal mostpopchars
 		for (int i = 0; i < numOfOccurences.length; i++) {

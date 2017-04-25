@@ -4,7 +4,7 @@
   Group name: 23D
   Course: CSE2010
   Section: 3
-  Description of the overall algorithm:
+  Description: This class holds a letter as a char as well as the amount of times that letter appears in the list (count) as an int
 */
 
 public class CharCount implements Comparable<CharCount>
